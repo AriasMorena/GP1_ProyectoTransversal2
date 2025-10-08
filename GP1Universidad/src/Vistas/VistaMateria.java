@@ -4,7 +4,13 @@
  */
 package Vistas;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.mariadb.jdbc.Connection;
+import persistencia.miConexion;
 
 /**
  *
@@ -13,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 public class VistaMateria extends javax.swing.JInternalFrame {
 
         private DefaultTableModel modelo= new DefaultTableModel();
+        private int estado;
 
     /**
      * Creates new form VistaMateria
@@ -20,6 +27,7 @@ public class VistaMateria extends javax.swing.JInternalFrame {
     public VistaMateria() {
         initComponents();
         cabecera();
+        bloquarId();
     }
 
     /**
@@ -38,7 +46,6 @@ public class VistaMateria extends javax.swing.JInternalFrame {
         jbAlta = new javax.swing.JButton();
         jbBaja = new javax.swing.JButton();
         jtAno = new javax.swing.JTextField();
-        jtEstado = new javax.swing.JTextField();
         jtNombreMate = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -46,6 +53,10 @@ public class VistaMateria extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jtMateria = new javax.swing.JTable();
         jbMostrar = new javax.swing.JButton();
+        jrActivo = new javax.swing.JRadioButton();
+        jrInactivo = new javax.swing.JRadioButton();
+        jLabel5 = new javax.swing.JLabel();
+        jtIdMateria = new javax.swing.JTextField();
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -105,7 +116,34 @@ public class VistaMateria extends javax.swing.JInternalFrame {
         ));
         jScrollPane1.setViewportView(jtMateria);
 
-        jbMostrar.setText("Mostrar");
+        jbMostrar.setText("Mostrar Materia");
+        jbMostrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbMostrarActionPerformed(evt);
+            }
+        });
+
+        jrActivo.setText("Activo");
+        jrActivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrActivoActionPerformed(evt);
+            }
+        });
+
+        jrInactivo.setText("Inactivo");
+        jrInactivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrInactivoActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Id Materia:");
+
+        jtIdMateria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtIdMateriaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -116,29 +154,35 @@ public class VistaMateria extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(62, 62, 62)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jbBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 197, Short.MAX_VALUE)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jbActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jtAno, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jrActivo)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jrInactivo))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jtAno, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jbActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jbAlta, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jbBaja, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jbInsertar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jbBaja, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jbInsertar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(197, 197, 197)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel5))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jtNombreMate, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jtNombreMate, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+                                    .addComponent(jtIdMateria))
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(307, 307, 307)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,20 +200,24 @@ public class VistaMateria extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbInsertar)
-                    .addComponent(jtNombreMate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                    .addComponent(jLabel5)
+                    .addComponent(jtIdMateria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbActualizar)
-                    .addComponent(jtAno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel2)
+                    .addComponent(jtNombreMate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbBorrar)
-                    .addComponent(jtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel3)
+                    .addComponent(jtAno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jbAlta)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jbAlta)
+                    .addComponent(jLabel4)
+                    .addComponent(jrActivo)
+                    .addComponent(jrInactivo))
                 .addGap(18, 18, 18)
                 .addComponent(jbBaja)
                 .addGap(17, 17, 17)
@@ -183,23 +231,114 @@ public class VistaMateria extends javax.swing.JInternalFrame {
 
     private void jbInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbInsertarActionPerformed
         // TODO add your handling code here:
+        
+        try {
+            jtIdMateria.setEditable(false);  
+            insertarMateria();
+            
+        } catch (SQLException ex){
+            
+        }
     }//GEN-LAST:event_jbInsertarActionPerformed
 
     private void jbActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbActualizarActionPerformed
         // TODO add your handling code here:
+         String id = jtIdMateria.getText();
+         
+         jtIdMateria.setEditable(true);
+
+         if (id.isEmpty()) {
+            
+            JOptionPane.showMessageDialog(this, "Ingrese el Id de la Materia que desee Actualizar.");
+        } else {
+             
+             actualizarMateria();
+             jtIdMateria.setEditable(false);  
+         }          
+         
     }//GEN-LAST:event_jbActualizarActionPerformed
 
     private void jbBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBorrarActionPerformed
         // TODO add your handling code here:
+         String id = jtIdMateria.getText();
+         
+         jtIdMateria.setEditable(true);
+
+         if (id.isEmpty()) {
+            
+            JOptionPane.showMessageDialog(this, "Ingrese el Id de la Materia que desee Borrar.");
+            
+        } else {
+             
+             borrarMateria();
+             jtIdMateria.setEditable(false);  
+         }          
+         
     }//GEN-LAST:event_jbBorrarActionPerformed
 
     private void jbAltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAltaActionPerformed
         // TODO add your handling code here:
+        String id = jtIdMateria.getText();
+         
+         jtIdMateria.setEditable(true);
+
+         if (id.isEmpty()) {
+            
+            JOptionPane.showMessageDialog(this, "Ingrese el Id de la Materia que desee Dar de Alta.");
+            
+        } else {
+             
+             darDeAlta();
+             jtIdMateria.setEditable(false);  
+         }          
+         
     }//GEN-LAST:event_jbAltaActionPerformed
 
     private void jbBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBajaActionPerformed
         // TODO add your handling code here:
+        String id = jtIdMateria.getText();
+         
+         jtIdMateria.setEditable(true);
+
+         if (id.isEmpty()) {
+            
+            JOptionPane.showMessageDialog(this, "Ingrese el Id de la Materia que desee Dar de Baja.");
+            
+        } else {
+             
+             darDeBaja();
+             jtIdMateria.setEditable(false);  
+         }          
+         
+         
     }//GEN-LAST:event_jbBajaActionPerformed
+
+    private void jrActivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrActivoActionPerformed
+        // TODO add your handling code here:
+        if (jrActivo.isSelected()) {
+            
+            jrInactivo.setSelected(false);
+            estado = 1;
+        }
+    }//GEN-LAST:event_jrActivoActionPerformed
+
+    private void jrInactivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrInactivoActionPerformed
+        // TODO add your handling code here:
+        if (jrInactivo.isSelected()) {
+            
+            jrActivo.setSelected(false);
+            estado = 0;
+        }
+    }//GEN-LAST:event_jrInactivoActionPerformed
+
+    private void jbMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbMostrarActionPerformed
+        // TODO add your handling code here:
+        mostrarMateria ();
+    }//GEN-LAST:event_jbMostrarActionPerformed
+
+    private void jtIdMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtIdMateriaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtIdMateriaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -207,6 +346,7 @@ public class VistaMateria extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jbActualizar;
     private javax.swing.JButton jbAlta;
@@ -214,8 +354,10 @@ public class VistaMateria extends javax.swing.JInternalFrame {
     private javax.swing.JButton jbBorrar;
     private javax.swing.JButton jbInsertar;
     private javax.swing.JButton jbMostrar;
+    private javax.swing.JRadioButton jrActivo;
+    private javax.swing.JRadioButton jrInactivo;
     private javax.swing.JTextField jtAno;
-    private javax.swing.JTextField jtEstado;
+    private javax.swing.JTextField jtIdMateria;
     private javax.swing.JTable jtMateria;
     private javax.swing.JTextField jtNombreMate;
     // End of variables declaration//GEN-END:variables
@@ -228,6 +370,306 @@ public class VistaMateria extends javax.swing.JInternalFrame {
         modelo.addColumn("Estado");
         
         jtMateria.setModel(modelo);
+    }
+    private void insertarMateria() throws SQLException{
+        
+        String nombre = jtNombreMate.getText();
+        String ano = jtAno.getText();
+        
+        if (nombre.isEmpty() || ano.isEmpty() || (!jrActivo.isSelected() && !jrInactivo.isSelected()) ) {
+            
+            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios" );
+            
+            return;        
+        } else {
+            
+            int anio = 0;
+        
+            try {
+            
+                anio = Integer.parseInt(ano);
+            
+            }catch (NumberFormatException e){
+            
+                JOptionPane.showMessageDialog(this, "Año ingresado incorrecto. Tiene que ser Entero.");
+            }   
+        
+            String sql = "INSERT INTO materia (nombre, año, estado) VALUES(?, ?, ?)";
+        
+            try (Connection con = (Connection) miConexion.getmiConexion();
+                PreparedStatement ps = con.prepareStatement(sql)){
+            
+                ps.setString(1, nombre);
+                ps.setInt(2, anio);
+                ps.setInt(3, estado);
+            
+                ps.executeUpdate();
+                JOptionPane.showMessageDialog(this, "Materia insertado correctamente.");
+                limpiarCampos();
+            
+            }catch (SQLException ex){
+            
+                JOptionPane.showMessageDialog(this, "Error al insertar Materia: " + ex);
+            }
+        }
+    }    
+    private void actualizarMateria(){
+        
+        int id;
+        
+        try {
+  
+            id = Integer.parseInt(jtIdMateria.getText());
+        
+        } catch (NumberFormatException e){
+            
+            JOptionPane.showMessageDialog(this, "El ID debe ser un numero entero.");
+            return;
+        }
+        
+        if (jtNombreMate.getText().isEmpty() || jtAno.getText().isEmpty()) {
+            
+            JOptionPane.showMessageDialog(this, "Por Favor Complete todos los campos obligatorios. Campos Incompletos");
+            return;
+        }
+        
+        
+        int confirmar = JOptionPane.showConfirmDialog(this, "¿Esta Seguro de Actualizar la Materia: " + jtNombreMate.getText() + "?" , 
+                " Confirmar Actualizacion:", JOptionPane.YES_NO_OPTION);
+        
+            if (confirmar == JOptionPane.YES_OPTION) {
+            
+                String nombre = jtNombreMate.getText();
+                int anio = 0;
+        
+                try {
+            
+                    anio = Integer.parseInt(jtAno.getText());
+            
+                }catch (NumberFormatException e){
+            
+            JOptionPane.showMessageDialog(this, "Año ingresado incorrecto. Tiene que ser Entero.");
+        }                
+                
+                
+                String sql = "UPDATE materia SET nombre= ?, año = ? WHERE idMateria= ?";
+                
+                try (Connection con = (Connection) miConexion.getmiConexion()){
+                    PreparedStatement ps = con.prepareStatement(sql);
+                    
+                   ps.setString(1, nombre);
+                   ps.setInt(2, anio);
+                   ps.setInt(3, id);
+                    
+                    int filas = ps.executeUpdate();
+                    
+                    if (filas > 0) {
+                        
+                        JOptionPane.showMessageDialog(this, "Materia Actualizado correctamente.");
+                        limpiarCampos ();
+                        mostrarMateria();
+                    } else {
+                        
+                        JOptionPane.showMessageDialog(this, "No se encontro una Materia con ese ID.");
+                    }
+                
+            } catch (SQLException ex){
+                
+                JOptionPane.showMessageDialog(this, "Error al Actualizar Materia: " + ex);
+            } catch (Exception e) {
+                
+                JOptionPane.showMessageDialog(this, "ERROR: " + e);
+            }
+        }
+        
+    }
+    
+        private void borrarMateria (){
+        
+        int id;
+        
+        try {
+            
+            id = Integer.parseInt(jtIdMateria.getText());
+
+        } catch (NumberFormatException e){
+            
+            JOptionPane.showMessageDialog(this, "El ID debe ser un numero entero.");
+            return;
+        }   
+        
+        int confirmar = JOptionPane.showConfirmDialog(this, "¿Esta Seguro de eliminar el Materia:  " + jtNombreMate.getText() + "?" , 
+                " Confirmar borrado", JOptionPane.YES_NO_OPTION);
+        
+        if (confirmar == JOptionPane.YES_OPTION) {
+            
+            String sql = "DELETE FROM materia WHERE idMateria = ?";
+            
+            try (Connection con = (Connection) miConexion.getmiConexion()){
+                    PreparedStatement ps = con.prepareStatement(sql);
+                    
+                    ps.setInt(1, id);
+                    
+                    int filas = ps.executeUpdate();
+                    
+                    if (filas > 0) {
+                        
+                        JOptionPane.showMessageDialog(this, "Materia borrada correctamente.");
+                        limpiarCampos ();
+                        mostrarMateria();
+                    } else {
+                        
+                        JOptionPane.showMessageDialog(this, "No se encontor una Materia con ese ID.");
+                    }
+                
+            } catch (SQLException ex){
+                
+                JOptionPane.showMessageDialog(this, "Error al borrar Materia: " + ex);
+            }
+        }   
+    }
+    
+    
+    
+    private void limpiarCampos(){
+        
+        jtIdMateria.setText("");
+        jtNombreMate.setText("");
+        jtAno.setText("");
+        jrInactivo.setSelected(false);
+        jrActivo.setSelected(false);
+    }
+    
+    public void mostrarMateria (){
+        
+        modelo.setRowCount(0);
+        
+        String sql = "SELECT idMateria, nombre, año, estado FROM materia ";
+        
+        try (Connection con = (Connection) miConexion.getmiConexion();
+               PreparedStatement ps = con.prepareStatement(sql);
+               ResultSet resultado = ps.executeQuery() ){
+            
+            while (resultado.next()){
+                
+                int id = resultado.getInt("idMateria");
+                String nombre = resultado.getString("nombre");
+                String anio = resultado.getString("año");
+
+                String estados; 
+
+                if ( 1 == resultado.getInt("estado")){
+                    
+                    estados = "Activo";                    
+                } else {
+                    
+                    estados = "Inactivo";
+                }
+                
+                
+                modelo.addRow(new Object[]{
+                    
+                    id, nombre, anio, estados
+                });  
+            }
+
+        } catch (SQLException ex){
+            
+            JOptionPane.showMessageDialog(this, "Error al mostrar las Materias: " + ex);
+        }
+    }
+    
+    public void darDeAlta (){
+        
+        int id;
+        int activo = 1;
+        try{
+            
+            id = Integer.parseInt(jtIdMateria.getText());
+            
+            
+        } catch (NumberFormatException e){
+            
+            JOptionPane.showMessageDialog(this, "El numero de ID es Invalido");
+            return;
+        }
+        
+        String sql = "UPDATE materia SET estado = ? WHERE idMateria = ?";
+        
+        try (Connection con = (Connection) miConexion.getmiConexion()){
+                    PreparedStatement ps = con.prepareStatement(sql);
+                    
+                    ps.setInt(1, activo);
+                    ps.setInt(2, id);
+                    
+                    
+                    
+                    int filas = ps.executeUpdate();
+                    
+                    if (filas > 0) {
+                        
+                        JOptionPane.showMessageDialog(this, "Materia ha sido dado de Alta.");
+                        limpiarCampos ();
+                        mostrarMateria();
+                    } else {
+                        
+                        JOptionPane.showMessageDialog(this, "No se encontro una Materia con ese ID.");
+                    }
+                
+            } catch (SQLException ex){
+                
+                JOptionPane.showMessageDialog(this, "Error al dar de alta a la Materia: " + ex);
+            }
+        
+    }
+    
+    public void darDeBaja (){
+        
+        int id;
+        int activo = 0;
+        try{
+            
+            id = Integer.parseInt(jtIdMateria.getText());
+            
+            
+        } catch (NumberFormatException e){
+            
+            JOptionPane.showMessageDialog(this, "El numero de ID es Invalido");
+            return;
+        }
+        
+        String sql = "UPDATE materia SET estado = ? WHERE idMateria = ?";
+        
+        try (Connection con = (Connection) miConexion.getmiConexion()){
+                    PreparedStatement ps = con.prepareStatement(sql);
+                    
+                    ps.setInt(1, activo);
+                    ps.setInt(2, id);
+                    
+                    
+                    
+                    int filas = ps.executeUpdate();
+                    
+                    if (filas > 0) {
+                        
+                        JOptionPane.showMessageDialog(this, "Materia ha sido dado de Alta.");
+                        limpiarCampos ();
+                        mostrarMateria();
+                    } else {
+                        
+                        JOptionPane.showMessageDialog(this, "No se encontro una Materia con ese ID.");
+                    }
+                
+            } catch (SQLException ex){
+                
+                JOptionPane.showMessageDialog(this, "Error al dar de alta a la Materia: " + ex);
+            }
+        
+    }
+    
+    private void bloquarId(){
+        
+        jtIdMateria.setEditable(false);
     }
 
 }

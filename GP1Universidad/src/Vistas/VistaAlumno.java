@@ -18,7 +18,7 @@ import persistencia.miConexion;
 public class VistaAlumno extends javax.swing.JInternalFrame {
     
     private DefaultTableModel modelo= new DefaultTableModel();
-    private int estado;
+    private int estado = 3;
 
     /**
      * Creates new form VistaAlumno
@@ -374,53 +374,55 @@ public class VistaAlumno extends javax.swing.JInternalFrame {
         
         String nombre = jtNombre.getText();
         String apellido = jtApellido.getText();
-        if (nombre.isEmpty() || apellido.isEmpty()) {
+        
+        if (nombre.isEmpty() && apellido.isEmpty() || (!jrActivo.isSelected() && !jrInactivo.isSelected()) ) {
             
-            JOptionPane.showMessageDialog(this, "Nombre y apellido son obligatorio." );
+            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios" );
             
             return;        
-        }
+        } else {
         
-        int dni;
+            int dni;
         
-        try{
+            try{
             
-            dni = Integer.parseInt(jtDni.getText());
-        } catch (NumberFormatException ex){
+                dni = Integer.parseInt(jtDni.getText());
+            } catch (NumberFormatException ex){
             
-            JOptionPane.showMessageDialog(this, "DNI invalido. Ingrese solo numeros.");
-            return;
-        }
+                JOptionPane.showMessageDialog(this, "DNI invalido. Ingrese solo numeros.");
+                return;
+            }
         
-        Date fechaUtil = jdNacimiento.getDate();
-        java.sql.Date fechaSql = null;
+            Date fechaUtil = jdNacimiento.getDate();
+            java.sql.Date fechaSql = null;
         
-        if (fechaUtil != null) {
+            if (fechaUtil != null) {
             
-            fechaSql = new java.sql.Date(fechaUtil.getTime());
-        }
+                fechaSql = new java.sql.Date(fechaUtil.getTime());
+            }
         
-        int activo = estado;
+            int activo = estado;
         
-        String sql = "INSERT INTO alumno (nombre, apellido, dni, fechaNacimiento, estado) VALUES(?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO alumno (nombre, apellido, dni, fechaNacimiento, estado) VALUES(?, ?, ?, ?, ?)";
         
-        try (Connection con = (Connection) miConexion.getmiConexion();
-                PreparedStatement ps = con.prepareStatement(sql)){
+            try (Connection con = (Connection) miConexion.getmiConexion();
+                    PreparedStatement ps = con.prepareStatement(sql)){
             
-            ps.setString(1, nombre);
-            ps.setString(2, apellido);
-            ps.setInt(3, dni);
-            ps.setDate(4, fechaSql);
-            ps.setInt(5, activo);
+                ps.setString(1, nombre);
+                ps.setString(2, apellido);
+                ps.setInt(3, dni);
+                ps.setDate(4, fechaSql);
+                ps.setInt(5, activo);
             
-            ps.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Alumno insertado correctamente.");
-            limpiarCampos();
+                ps.executeUpdate();
+                JOptionPane.showMessageDialog(this, "Alumno insertado correctamente.");
+                limpiarCampos();
             
-        }catch (SQLException ex){
+            }catch (SQLException ex){
             
-            JOptionPane.showMessageDialog(this, "Error al insertar alumno: " + ex);
-        }
+                JOptionPane.showMessageDialog(this, "Error al insertar alumno: " + ex);
+            }
+        } 
     }
     
     private void actualizarAlumnos(){
