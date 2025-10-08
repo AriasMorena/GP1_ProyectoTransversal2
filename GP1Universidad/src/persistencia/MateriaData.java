@@ -4,8 +4,6 @@
  */
 package persistencia;
 
-import UniversidadGrupo1.acessoADatos.Conexión;
-import UniversidadGrupo1.entidades.Materia;
 import entidades.Materia;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,7 +21,7 @@ public class MateriaData {
     private Connection con=null;
     
     public MateriaData() throws SQLException{
-        con= Conexión.getConexión();
+        con = miConexion.getmiConexion();
     }
     
     public void guardarMateria (Materia materia) throws SQLException{
@@ -31,8 +29,8 @@ public class MateriaData {
        try{
            PreparedStatement ps= con.prepareStatement(sql);
            ps.setString(1, materia.getNombre());
-           ps.setInt(2,materia.getanio());
-           ps.setBoolean(3, materia.isestado());
+           ps.setInt(2,materia.getAnio());
+           ps.setInt(3, materia.getEstado());
            ps.executeUpdate();
            ps.close();
            System.out.println("Materia guardada correctamente");
@@ -51,7 +49,7 @@ public class MateriaData {
             ResultSet rs = ps.executeQuery();
             
             if(rs.next()){
-            materia = new Materia();
+            Materia = new Materia();
             materia.setIdMateria(rs.getInt("idMateria"));
             materia.setNombre(rs.getString("nombre"));
             materia.setAnio(rs.getAnio("anio"));
@@ -65,12 +63,12 @@ public class MateriaData {
   }
     
     public void modificarMateria (Materia materia) throws SQLException{
-        String sql= "UPDATE materia SET nombre = ?, AñoMateria =?, Activo = ? WHERE idMateria =?";
+        String sql= "UPDATE materia SET nombre = ?, anio =?, estado = ? WHERE idMateria =?";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1,materia.getNombre());
-            ps.setInt(2, materia.getanio());
-            ps.setBoolean(3,materia.isestado());
+            ps.setInt(2, materia.getAnio());
+            ps.setInt(3,materia.getEstado());
             ps.setInt(4, materia.getIdMateria());
             ps.executeUpdate();
             ps.close();
@@ -81,7 +79,7 @@ public class MateriaData {
     }
     
     public void eliminarMateria(int id){
-        String sql= "UPDATE materia SET Activo = 0 WHERE idMateria =?";
+        String sql= "UPDATE materia SET estado = 0 WHERE idMateria =?";
         
         try{
             PreparedStatement ps = con.prepareStatement(sql);
@@ -96,14 +94,14 @@ public class MateriaData {
     
     public List<Materia>listarMateria() throws SQLException{
         List<Materia>listaMateria =new ArrayList<>();
-        String sql ="SELECT * FROM materia WHERE Activo = 1";
+        String sql ="SELECT * FROM materia WHERE estado = 1";
         
         try {
             PreparedStatement ps = con.prepareStatement(sql);
             ResultSet rs= ps.executeQuery();
             
             while(rs.next()){
-               Materia materia =new Materia();
+               Materia materia = new Materia();
                materia.setIdMateria(rs.getInt("idMateria"));
                materia.setNombre(rs.getString("nombre"));
                materia.setAnio(rs.getInt("anio"));

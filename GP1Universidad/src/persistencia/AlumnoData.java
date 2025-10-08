@@ -93,8 +93,7 @@ public class AlumnoData {
         String sql = "SELECT  dni, apellido, nombre, fechaNacimiento  FROM alumno WHERE id_alumno=? AND estado=1";
         
         Alumno alumno = null;
-        
-        
+                
         try {
             PreparedStatement ps =con.prepareStatement(sql);
             ps.setInt(1, id);
