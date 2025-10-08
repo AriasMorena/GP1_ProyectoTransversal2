@@ -18,6 +18,7 @@ import persistencia.miConexion;
 public class VistaAlumno extends javax.swing.JInternalFrame {
     
     private DefaultTableModel modelo= new DefaultTableModel();
+    private int estado;
 
     /**
      * Creates new form VistaAlumno
@@ -45,7 +46,6 @@ public class VistaAlumno extends javax.swing.JInternalFrame {
         jtDni = new javax.swing.JTextField();
         jtNombre = new javax.swing.JTextField();
         jtApellido = new javax.swing.JTextField();
-        jtEstado = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -55,6 +55,8 @@ public class VistaAlumno extends javax.swing.JInternalFrame {
         jtAlumnos = new javax.swing.JTable();
         jbMostrar = new javax.swing.JButton();
         jdNacimiento = new com.toedter.calendar.JDateChooser();
+        jrActivo = new javax.swing.JRadioButton();
+        jrInactivo = new javax.swing.JRadioButton();
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -68,6 +70,11 @@ public class VistaAlumno extends javax.swing.JInternalFrame {
         });
 
         jbActualizar.setText("Actualizar");
+        jbActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbActualizarActionPerformed(evt);
+            }
+        });
 
         jbBorrar.setText("Borrar");
         jbBorrar.addActionListener(new java.awt.event.ActionListener() {
@@ -77,8 +84,18 @@ public class VistaAlumno extends javax.swing.JInternalFrame {
         });
 
         jbAlta.setText("Dar de Alta");
+        jbAlta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbAltaActionPerformed(evt);
+            }
+        });
 
         jbBaja.setText("Dar de Baja");
+        jbBaja.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbBajaActionPerformed(evt);
+            }
+        });
 
         jtApellido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -98,13 +115,10 @@ public class VistaAlumno extends javax.swing.JInternalFrame {
 
         jtAlumnos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
-                "ID Alumno", "Nombre", "Apellido", "DNI", "Fecha de Nacimiento", "Estado"
+
             }
         ));
         jScrollPane1.setViewportView(jtAlumnos);
@@ -113,6 +127,20 @@ public class VistaAlumno extends javax.swing.JInternalFrame {
         jbMostrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbMostrarActionPerformed(evt);
+            }
+        });
+
+        jrActivo.setText("Activo");
+        jrActivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrActivoActionPerformed(evt);
+            }
+        });
+
+        jrInactivo.setText("Inactivo");
+        jrInactivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrInactivoActionPerformed(evt);
             }
         });
 
@@ -144,10 +172,12 @@ public class VistaAlumno extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jrActivo)
+                                .addGap(18, 18, 18)
+                                .addComponent(jrInactivo))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
@@ -192,8 +222,9 @@ public class VistaAlumno extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jbBaja)
-                            .addComponent(jtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
+                            .addComponent(jLabel5)
+                            .addComponent(jrActivo)
+                            .addComponent(jrInactivo))
                         .addGap(18, 18, 18)
                         .addComponent(jbMostrar)
                         .addGap(25, 25, 25)
@@ -240,6 +271,71 @@ public class VistaAlumno extends javax.swing.JInternalFrame {
          }
     }//GEN-LAST:event_jbBorrarActionPerformed
 
+    private void jrActivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrActivoActionPerformed
+        // TODO add your handling code here:
+        
+        if (jrActivo.isSelected()) {
+            
+            jrInactivo.setSelected(false);
+            estado = 1;
+        }
+
+    }//GEN-LAST:event_jrActivoActionPerformed
+
+    private void jrInactivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrInactivoActionPerformed
+        // TODO add your handling code here:
+        
+         if (jrInactivo.isSelected()) {
+            
+            jrActivo.setSelected(false);
+            estado = 0;
+        }
+
+    }//GEN-LAST:event_jrInactivoActionPerformed
+
+    private void jbActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbActualizarActionPerformed
+        // TODO add your handling code here:
+        
+        String dni = jtDni.getText();
+        
+         if (dni.isEmpty()) {
+            
+            JOptionPane.showMessageDialog(this, "Ingrese el documento del Alumno que desee Actualizar.");
+            return;
+        } else {
+             
+             actualizarAlumnos();
+         } 
+    }//GEN-LAST:event_jbActualizarActionPerformed
+
+    private void jbAltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAltaActionPerformed
+        // TODO add your handling code here:
+        String dni = jtDni.getText();
+        
+         if (dni.isEmpty()) {
+            
+            JOptionPane.showMessageDialog(this, "Ingrese el documento del Alumno que desee Dar la Alta.");
+            return;
+        } else {
+             
+             darDeAlta();
+         }
+    }//GEN-LAST:event_jbAltaActionPerformed
+
+    private void jbBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBajaActionPerformed
+        // TODO add your handling code here:
+        String dni = jtDni.getText();
+        
+         if (dni.isEmpty()) {
+            
+            JOptionPane.showMessageDialog(this, "Ingrese el documento del Alumno que desee Dar la Baja.");
+            return;
+        } else {
+             
+             darDeBaja();
+         }
+    }//GEN-LAST:event_jbBajaActionPerformed
+
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -256,10 +352,11 @@ public class VistaAlumno extends javax.swing.JInternalFrame {
     private javax.swing.JButton jbInsertar;
     private javax.swing.JButton jbMostrar;
     private com.toedter.calendar.JDateChooser jdNacimiento;
+    private javax.swing.JRadioButton jrActivo;
+    private javax.swing.JRadioButton jrInactivo;
     private javax.swing.JTable jtAlumnos;
     private javax.swing.JTextField jtApellido;
     private javax.swing.JTextField jtDni;
-    private javax.swing.JTextField jtEstado;
     private javax.swing.JTextField jtNombre;
     // End of variables declaration//GEN-END:variables
 
@@ -303,7 +400,7 @@ public class VistaAlumno extends javax.swing.JInternalFrame {
             fechaSql = new java.sql.Date(fechaUtil.getTime());
         }
         
-        String activo = jtEstado.getText();
+        int activo = estado;
         
         String sql = "INSERT INTO alumno (nombre, apellido, dni, fechaNacimiento, estado) VALUES(?, ?, ?, ?, ?)";
         
@@ -314,7 +411,7 @@ public class VistaAlumno extends javax.swing.JInternalFrame {
             ps.setString(2, apellido);
             ps.setInt(3, dni);
             ps.setDate(4, fechaSql);
-            ps.setString(5, activo);
+            ps.setInt(5, activo);
             
             ps.executeUpdate();
             JOptionPane.showMessageDialog(this, "Alumno insertado correctamente.");
@@ -324,6 +421,79 @@ public class VistaAlumno extends javax.swing.JInternalFrame {
             
             JOptionPane.showMessageDialog(this, "Error al insertar alumno: " + ex);
         }
+    }
+    
+    private void actualizarAlumnos(){
+        
+        int dni;
+        
+        try {
+  
+            dni = Integer.parseInt(jtDni.getText());
+        
+        } catch (NumberFormatException e){
+            
+            JOptionPane.showMessageDialog(this, "El DNI debe ser un numero entero.");
+            return;
+        }
+        
+        if (jtNombre.getText().isEmpty() || jtApellido.getText().isEmpty() || jtDni.getText().isEmpty()) {
+            
+            JOptionPane.showMessageDialog(this, "Por Favor Complete todos los campos obligatorios. Campos Incompletos");
+            return;
+        }
+        
+        
+        
+        int confirmar = JOptionPane.showConfirmDialog(this, "¿Esta Seguro de Actualizar el alumno con DNI " + dni + "?" , 
+                " Confirmar Actualizacion:", JOptionPane.YES_NO_OPTION);
+        
+            if (confirmar == JOptionPane.YES_OPTION) {
+            
+                String nombre = jtNombre.getText();
+                String apellido = jtApellido.getText();
+                
+                
+                Date fechaUtil = jdNacimiento.getDate();
+                java.sql.Date fechaSql = null;
+        
+                if (fechaUtil != null) {
+            
+                    fechaSql = new java.sql.Date(fechaUtil.getTime());
+                }
+                
+                
+                String sql = "UPDATE alumno SET nombre= ?, apellido = ?, fechaNacimiento = ? WHERE dni= ?";
+                
+                try (Connection con = (Connection) miConexion.getmiConexion()){
+                    PreparedStatement ps = con.prepareStatement(sql);
+                    
+                   ps.setString(1, nombre);
+                   ps.setString(2, apellido);
+                   ps.setDate(3, fechaSql);
+                   ps.setInt(4, dni);
+                    
+                    int filas = ps.executeUpdate();
+                    
+                    if (filas > 0) {
+                        
+                        JOptionPane.showMessageDialog(this, "Alumno Actualizado correctamente.");
+                        limpiarCampos ();
+                        mostrarAlumnos();
+                    } else {
+                        
+                        JOptionPane.showMessageDialog(this, "No se encontor un alumno con ese DNI.");
+                    }
+                
+            } catch (SQLException ex){
+                
+                JOptionPane.showMessageDialog(this, "Error al Actualizar alumno: " + ex);
+            } catch (Exception e) {
+                
+                JOptionPane.showMessageDialog(this, "ERROR: " + e);
+            }
+        }
+        
     }
     
     private void borrarAlumnos (){
@@ -371,13 +541,100 @@ public class VistaAlumno extends javax.swing.JInternalFrame {
         }   
     }
     
+    public void darDeAlta (){
+        
+        int dni;
+        int activo = 1;
+        try{
+            
+            dni = Integer.parseInt(jtDni.getText());
+            
+            
+        } catch (NumberFormatException e){
+            
+            JOptionPane.showMessageDialog(this, "El numero de DNI es Invalido");
+            return;
+        }
+        
+        String sql = "UPDATE alumno SET estado = ? WHERE dni = ?";
+        
+        try (Connection con = (Connection) miConexion.getmiConexion()){
+                    PreparedStatement ps = con.prepareStatement(sql);
+                    
+                    ps.setInt(1, activo);
+                    ps.setInt(2, dni);
+                    
+                    
+                    
+                    int filas = ps.executeUpdate();
+                    
+                    if (filas > 0) {
+                        
+                        JOptionPane.showMessageDialog(this, "Alumno ha sido dado de Alta.");
+                        limpiarCampos ();
+                        mostrarAlumnos();
+                    } else {
+                        
+                        JOptionPane.showMessageDialog(this, "No se encontor un alumno con ese DNI.");
+                    }
+                
+            } catch (SQLException ex){
+                
+                JOptionPane.showMessageDialog(this, "Error al dar de alta al alumno: " + ex);
+            }
+        
+    }
+    
+    public void darDeBaja (){
+        int dni;
+        int activo = 0;
+        try{
+            
+            dni = Integer.parseInt(jtDni.getText());
+            
+            
+        } catch (NumberFormatException e){
+            
+            JOptionPane.showMessageDialog(this, "El numero de DNI es Invalido");
+            return;
+        }
+        
+        String sql = "UPDATE alumno SET estado = ? WHERE dni = ?";
+        
+        try (Connection con = (Connection) miConexion.getmiConexion()){
+                    PreparedStatement ps = con.prepareStatement(sql);
+                    
+                    ps.setInt(1, activo);
+                    ps.setInt(2, dni);
+                    
+                    
+                    
+                    int filas = ps.executeUpdate();
+                    
+                    if (filas > 0) {
+                        
+                        JOptionPane.showMessageDialog(this, "Alumno ha sido dado de Baja.");
+                        limpiarCampos ();
+                        mostrarAlumnos();
+                    } else {
+                        
+                        JOptionPane.showMessageDialog(this, "No se encontor un alumno con ese DNI.");
+                    }
+                
+            } catch (SQLException ex){
+                
+                JOptionPane.showMessageDialog(this, "Error al dar de baja al alumno: " + ex);
+            }
+    }
+    
     private void limpiarCampos(){
         
         jtNombre.setText("");
         jtApellido.setText("");
         jtDni.setText("");
         jdNacimiento.setDate(null);
-        jtEstado.setText("");
+        jrInactivo.setSelected(false);
+        jrActivo.setSelected(false);
     }
     
     public void mostrarAlumnos (){
@@ -397,11 +654,21 @@ public class VistaAlumno extends javax.swing.JInternalFrame {
                 String apellido = resultado.getString("apellido");
                 String nombre = resultado.getString("nombre");
                 Date fecha = resultado.getDate("fechaNacimiento");
-                int estado = resultado.getInt("estado");
+                
+                String estados; 
+
+                if ( 1 == resultado.getInt("estado")){
+                    
+                    estados = "Activo";                    
+                } else {
+                    
+                    estados = "Inactivo";
+                }
+                
                 
                 modelo.addRow(new Object[]{
                     
-                    id, nombre, apellido, dni, fecha, estado
+                    id, nombre, apellido, dni, fecha, estados
                 });  
             }
 
