@@ -22,30 +22,7 @@ public class miConexion {
     private miConexion() {}        
 
      public static Connection getmiConexion() {
-    /*            
-        if (connection == null) {
-                  
-        try {
-            Class.forName("org.mariadb.jdbc.Driver");
-            connection = DriverManager.getConnection(URL+BD, USUARIO, PASSWORD);
-            JOptionPane.showMessageDialog(null, "conectado con exito");
-            
-    } catch (ClassNotFoundException e){
-        
-            JOptionPane.showMessageDialog(null, "error al conectar el Driver");
-            
-    } catch (SQLException e){
-     
-            JOptionPane.showMessageDialog(null, "error al conectar la BD");
-            
-    }
-        
-      }
-       return connection;
-    }
-    */
-    
-    Connection con = null;
+        Connection con = null;
     
     try {
     
